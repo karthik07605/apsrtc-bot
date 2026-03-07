@@ -1,4 +1,4 @@
-name: APSRTC 10-Minute Check
+name: APSRTC 10-Minute Check new
 
 on:
   schedule:
