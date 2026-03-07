@@ -71,7 +71,8 @@ const { chromium } = require('playwright');
   }
 
   // Keep open for payment (5 minutes)
-  await page.waitForTimeout(300000);
+  
   await browser.close();
 
 })();
+
