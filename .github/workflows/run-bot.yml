@@ -2,7 +2,7 @@ name: APSRTC 10-Minute Check
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # This triggers every 10 minutes
+    - cron: '*/13 * * * *'  # This triggers every 10 minutes
   workflow_dispatch:        # This adds a "Run" button so you can start it manually
 
 jobs:
