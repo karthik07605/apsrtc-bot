@@ -1,0 +1,26 @@
+name: APSRTC 10-Minute Check
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # This triggers every 10 minutes
+  workflow_dispatch:        # This adds a "Run" button so you can start it manually
+
+jobs:
+  check-tickets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: Run Booking Script
+        run: node booking.js
