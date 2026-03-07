@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 
 (async () => {
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -73,4 +73,5 @@ const { chromium } = require('playwright');
   // Keep open for payment (5 minutes)
   await page.waitForTimeout(300000);
   await browser.close();
+
 })();
