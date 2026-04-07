@@ -5,35 +5,35 @@ const { chromium } = require('playwright');
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  console.log("Starting APSRTC Automation: Service 5706 | Seat 12 | Female | 19-March-2026...");
+  console.log("Starting APSRTC Automation: Service 5706 | Seats 2 & 3 | 10-April-2026...");
 
   try {
     await page.goto('https://www.apsrtconline.in/oprs-web/', { waitUntil: 'networkidle' });
 
     // 1. Enter Cities
     await page.fill('#fromPlaceName', 'CHENNAI');
-    await page.waitForTimeout(1000); 
+    await page.waitForTimeout(1000);
     await page.keyboard.press('Enter');
-    
+
     await page.fill('#toPlaceName', 'PALAMANERU');
     await page.waitForTimeout(1000);
     await page.keyboard.press('Enter');
 
-    // 2. Date Selection: 19-March-2026
+    // 2. Date Selection: 10-April-2026
     await page.click('#txtJourneyDate');
     while (true) {
       const month = await page.locator('.ui-datepicker-month').first().innerText();
       const year = await page.locator('.ui-datepicker-year').first().innerText();
-      if (month.includes('March') && year.includes('2026')) break;
+      if (month.includes('April') && year.includes('2026')) break;
       await page.click('.ui-datepicker-next');
-      await page.waitForTimeout(500); 
+      await page.waitForTimeout(500);
     }
-    await page.locator('.ui-datepicker-group-first >> a.ui-state-default:has-text("19")').click();
+    await page.locator('.ui-datepicker-group-first >> a.ui-state-default:has-text("10")').click();
 
     // 3. Search
     await page.click('#searchBtn');
 
-    // 4. Target Service 5706
+    // 4. Select Service 5706
     console.log("Searching for Service 5706...");
     const busRow = page.locator('.rSetForward', { hasText: '5706' });
     const selectButton = busRow.locator('input[name="SrvcSelectBtnForward"]');
@@ -42,37 +42,49 @@ const { chromium } = require('playwright');
 
     // 5. Boarding Points
     await page.waitForSelector('#ForwardBoardId', { timeout: 10000 });
-    await page.selectOption('#ForwardBoardId', { index: 1 }); 
-    await page.click('#fwLtBtn'); 
+    await page.selectOption('#ForwardBoardId', { index: 1 });
+    await page.click('#fwLtBtn');
 
-    // 6. Target Seat Number 12
-    console.log("Selecting Seat Number 12...");
-    const seat12 = page.locator('li.availSeatClassS[title*="Seat:12"]');
-    await seat12.waitFor({ state: 'visible', timeout: 10000 });
-    await seat12.click();
+    // 6. Select Seats 2 and 3
+    console.log("Selecting Seats 2 and 3...");
 
-    // 7. Passenger Details (Updated to Female)
+    const seat2 = page.locator('li.availSeatClassS[title*="Seat:2"]');
+    const seat3 = page.locator('li.availSeatClassS[title*="Seat:3"]');
+
+    await seat2.waitFor({ state: 'visible', timeout: 10000 });
+    await seat2.click();
+
+    await seat3.waitFor({ state: 'visible', timeout: 10000 });
+    await seat3.click();
+
+    // 7. Passenger Details
+
+    // Common details
     await page.fill('#mobileNo', '9876543210');
     await page.fill('#email', 'karthik.mits@example.com');
-    await page.selectOption('#genderCodeIdForward0', '25'); // 25 = FEMALE
-    await page.fill('#passengerNameForward0', 'K Karthik');
+
+    // Seat 2 → Female
+    await page.selectOption('#genderCodeIdForward0', '25'); // Female
+    await page.fill('#passengerNameForward0', 'Passenger Female');
     await page.fill('#passengerAgeForward0', '22');
     await page.selectOption('#concessionIdsForward0', '1347688949874');
 
-    console.log("SUCCESS: Reached Payment! Check your browser.");
-    
-    // Plays a beep sound in the terminal to alert you
-    process.stdout.write('\x07'); 
-    
+    // Seat 3 → Male
+    await page.selectOption('#genderCodeIdForward1', '26'); // Male
+    await page.fill('#passengerNameForward1', 'Passenger Male');
+    await page.fill('#passengerAgeForward1', '24');
+    await page.selectOption('#concessionIdsForward1', '1347688949874');
+
+    console.log("SUCCESS: Both seats selected and details filled!");
+
+    process.stdout.write('\x07'); // Beep
+
     await page.click('#BookNowBtn');
 
   } catch (error) {
     console.error("Automation error:", error);
   }
 
-  // Keep open for payment (5 minutes)
-  
   await browser.close();
 
 })();
-
