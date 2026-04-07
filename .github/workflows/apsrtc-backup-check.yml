@@ -1,0 +1,27 @@
+name: APSRTC Backup Check  # Give it a unique name
+
+on:
+  schedule:
+    - cron: '*/12 * * * *'  # Set to 12 mins so it runs at different times than the 10-min one
+  workflow_dispatch: 
+
+jobs:
+  check-tickets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: Run Booking Script
+        continue-on-error: true 
+        run: node booking.js
