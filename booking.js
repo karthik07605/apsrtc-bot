@@ -50,7 +50,7 @@ const { chromium } = require('playwright');
 
     // 6. Target Seat Number 12
     console.log("Selecting Seat Number 12...");
-    const seat12 = page.locator('li.availSeatClassS[title*="Seat:35"]');
+    const seat12 = page.locator('li.availSeatClassS[title*="Seat:37"]');
     await seat12.waitFor({ state: 'visible', timeout: 10000 });
     await seat12.click();
 
