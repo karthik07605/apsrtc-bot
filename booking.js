@@ -30,7 +30,7 @@ const { chromium } = require('playwright');
     }
     await page.locator('.ui-datepicker-group-first >> a.ui-state-default:has-text("10")').click();
 
-    // 3. Search
+    // 3. Search buses
     await page.click('#searchBtn');
 
     // 4. Select Service 5706
@@ -40,16 +40,16 @@ const { chromium } = require('playwright');
     await selectButton.waitFor({ state: 'visible', timeout: 20000 });
     await selectButton.click({ force: true });
 
-    // 5. Boarding Points
+    // 5. Boarding Point
     await page.waitForSelector('#ForwardBoardId', { timeout: 10000 });
     await page.selectOption('#ForwardBoardId', { index: 1 });
     await page.click('#fwLtBtn');
 
-    // 6. Select Seats 2 and 3
+    // 6. Select Seats (FIXED SELECTOR)
     console.log("Selecting Seats 2 and 3...");
 
-    const seat2 = page.locator('li.availSeatClassS[title*="Seat:2 "]');
-    const seat3 = page.locator('li.availSeatClassS[title*="Seat:3 "]');
+    const seat2 = page.locator('li.availSeatClassS[title^="Seat:2 "]').first();
+    const seat3 = page.locator('li.availSeatClassS[title^="Seat:3 "]').first();
 
     await seat2.waitFor({ state: 'visible', timeout: 10000 });
     await seat2.click();
@@ -63,22 +63,26 @@ const { chromium } = require('playwright');
     await page.fill('#mobileNo', '9876543210');
     await page.fill('#email', 'karthik.mits@example.com');
 
+    // WAIT for passenger fields to fully load (IMPORTANT FIX)
+    await page.waitForSelector('#genderCodeIdForward0 option', { timeout: 10000 });
+    await page.waitForSelector('#genderCodeIdForward1 option', { timeout: 10000 });
+
     // Seat 2 → Female
-    await page.selectOption('#genderCodeIdForward0', '25'); // Female
+    await page.selectOption('#genderCodeIdForward0', { label: 'FEMALE' });
     await page.fill('#passengerNameForward0', 'Passenger Female');
     await page.fill('#passengerAgeForward0', '22');
-    await page.selectOption('#concessionIdsForward0', '1347688949874');
 
     // Seat 3 → Male
-    await page.selectOption('#genderCodeIdForward1', '26'); // Male
+    await page.selectOption('#genderCodeIdForward1', { label: 'MALE' });
     await page.fill('#passengerNameForward1', 'Passenger Male');
     await page.fill('#passengerAgeForward1', '24');
-    await page.selectOption('#concessionIdsForward1', '1347688949874');
 
     console.log("SUCCESS: Both seats selected and details filled!");
 
-    process.stdout.write('\x07'); // Beep
+    // Beep alert
+    process.stdout.write('\x07');
 
+    // Proceed to payment
     await page.click('#BookNowBtn');
 
   } catch (error) {
@@ -86,5 +90,4 @@ const { chromium } = require('playwright');
   }
 
   await browser.close();
-
 })();
