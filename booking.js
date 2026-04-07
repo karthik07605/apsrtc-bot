@@ -48,8 +48,8 @@ const { chromium } = require('playwright');
     // 6. Select Seats 2 and 3
     console.log("Selecting Seats 2 and 3...");
 
-    const seat2 = page.locator('li.availSeatClassS[title*="Seat:2"]');
-    const seat3 = page.locator('li.availSeatClassS[title*="Seat:3"]');
+    const seat2 = page.locator('li.availSeatClassS[title*="Seat:2 "]');
+    const seat3 = page.locator('li.availSeatClassS[title*="Seat:3 "]');
 
     await seat2.waitFor({ state: 'visible', timeout: 10000 });
     await seat2.click();
