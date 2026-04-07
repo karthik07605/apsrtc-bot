@@ -23,4 +23,6 @@ jobs:
           npx playwright install chromium --with-deps
 
       - name: Run Booking Script
+        continue-on-error: true
         run: node booking.js
+        timeout-minutes: 8
